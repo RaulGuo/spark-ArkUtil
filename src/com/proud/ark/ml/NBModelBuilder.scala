@@ -18,7 +18,7 @@ import com.proud.ark.data.HDFSUtil
 import org.apache.spark.sql.SaveMode
 import org.apache.spark.ml.feature.IDFModel
 import org.apache.spark.sql.Row
-import com.proud.ark.db.ProdIntranetDBUtil
+import com.proud.ark.db.Prod153IntraDBUtil
 
 object NBModelBuilder {
   
@@ -29,7 +29,7 @@ object NBModelBuilder {
   
   def initNaiveBayesModel(spark:SparkSession):(IDFModel, NaiveBayesModel) = {
     import spark.implicits._
-    val df = ProdIntranetDBUtil.loadDFFromTable("jobs.zhiwei_fenlei_training", spark)
+    val df = Prod153IntraDBUtil.loadDFFromTable("test.zhiwei_fenlei_training", spark)
     
     //1. 进行分词，输出字段tokens中是title_parsed的分词结果，是一个字符串的数组
     val tokenizer = new Tokenizer().setInputCol("title_parsed").setOutputCol("tokens")

@@ -22,4 +22,10 @@ object HDFSUtil {
   def loadCompanyNoGetiBasic(spark:SparkSession) = {
     getDSFromHDFS(GlobalVariables.hdfsCompanyDir, spark)
   }
+  
+  def removeDir(dir:String){
+    import scala.sys.process._
+    
+    "hadoop fs -rm -r "+dir !
+  }
 }

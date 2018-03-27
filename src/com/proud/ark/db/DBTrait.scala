@@ -32,6 +32,11 @@ trait DBTrait {
     df
   }
   
+  def loadDFFromTableRange(table:String, spark:SparkSession, min:Long = 1, max:Long = 1000) = {
+    val df = spark.read.jdbc(dbUrl, table, "id", min, max, 1, prop)
+    df
+  }
+  
   def loadDFFromTable(table: String, sqlContext:SQLContext) = {
     val df = sqlContext.read.jdbc(dbUrl, table, prop)
     df
@@ -45,6 +50,22 @@ trait DBTrait {
   def loadDFFromTable(table: String, parallel:Int, spark:SparkSession) = {
 	  val (max, min) = getIdRange(table)
     val df = spark.read.jdbc(dbUrl, table, "id", min, max, parallel, prop)
+    df
+  }
+  
+  def loadSampleDFFromTable(table: String, parallel:Int = 1, spark:SparkSession, min:Int = 1, max:Int = 10000) = {
+    val df = spark.read.jdbc(dbUrl, table, "id", min, max, parallel, prop)
+    df
+  }
+  
+  def loadDFFromTable(table: String, parallel:Int, times:Int, currTime:Int, spark:SparkSession) = {
+	  val (max, min) = getIdRange(table)
+	  
+	  val batch = (max-min)/times
+	  val first = (currTime-1)*batch+1
+	  val last = if(currTime == times) max else first+batch
+    
+	  val df = spark.read.jdbc(dbUrl, table, "id", min, max, parallel, prop)
     df
   }
   
